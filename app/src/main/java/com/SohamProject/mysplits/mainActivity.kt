@@ -16,6 +16,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -257,8 +258,11 @@ fun GroupDetailsScreen(group: Group, viewModel: SplitViewModel, onBack: () -> Un
     var showAddExpenseDialog by remember { mutableStateOf(false) }
     var showAddMemberDialog by remember { mutableStateOf(false) }
     var showSettlementDialog by remember { mutableStateOf(false) }
-    var showDeleteConfirm by remember { mutableStateOf(false) }
+    
+    // New state for expense deletion via swipe
+    var expenseToDelete by remember { mutableStateOf<Expense?>(null) } 
 
+    // EDIT STATE - now only for editing, not deleting
     var editingExpenseId by remember { mutableStateOf<Int?>(null) }
     var editData by remember { mutableStateOf<Triple<Expense, Map<Int, Double>, Map<Int, Double>>?>(null) }
     val scope = rememberCoroutineScope() // Needs to be here if used inside a Composable
@@ -272,7 +276,7 @@ fun GroupDetailsScreen(group: Group, viewModel: SplitViewModel, onBack: () -> Un
                     val context = androidx.compose.ui.platform.LocalContext.current
                     IconButton(onClick = {
                         PdfExporter.generateAndShare(context, group, members, expenses, allPayers, allShares, emptyList())
-                    }) { Icon(Icons.Default.Send, "Export") }
+                    }) { Icon(Icons.AutoMirrored.Filled.Send, "Export") }
                 }
             )
         },
@@ -282,7 +286,7 @@ fun GroupDetailsScreen(group: Group, viewModel: SplitViewModel, onBack: () -> Un
                     selected = selectedTab == 0,
                     onClick = { selectedTab = 0 },
                     label = { Text("Expenses") },
-                    icon = { Icon(Icons.Default.List, null) }
+                    icon = { Icon(Icons.AutoMirrored.Filled.List, null) }
                 )
                 NavigationBarItem(
                     selected = selectedTab == 1,
@@ -327,30 +331,60 @@ fun GroupDetailsScreen(group: Group, viewModel: SplitViewModel, onBack: () -> Un
                     items(expenses, key = { it.id }) { exp ->
                         val payersForExp = allPayers.filter { it.expenseId == exp.id }
                         val payerNames = payersForExp.mapNotNull { p -> members.find { it.id == p.memberId }?.name }
+                        
+                        val dismissState = rememberSwipeToDismissBoxState(
+                            confirmValueChange = { newValue ->
+                                if (newValue == SwipeToDismissBoxValue.EndToStart) {
+                                    expenseToDelete = exp // Set the expense to be deleted
+                                    false // Snap back, but open dialog
+                                } else {
+                                    false
+                                }
+                            }
+                        )
 
-                        Card(
-                            modifier = Modifier.fillMaxWidth().clickable {
-                                scope.launch {
-                                    val pMap = payersForExp.associate { it.memberId to it.amountPaid }
-                                    val shares = viewModel.getExpenseShares(exp.id)
-                                    val sMap = shares.associate { it.memberId to it.weight }
-                                    editData = Triple(exp, pMap, sMap)
-                                    editingExpenseId = exp.id
+                        SwipeToDismissBox(
+                            state = dismissState,
+                            enableDismissFromStartToEnd = false, // Only swipe left
+                            backgroundContent = {
+                                val color = if (dismissState.dismissDirection == SwipeToDismissBoxValue.EndToStart) {
+                                    Color.Red.copy(alpha = 0.8f)
+                                } else Color.Transparent
+
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .padding(8.dp)
+                                        .background(color, shape = CardDefaults.shape),
+                                    contentAlignment = Alignment.CenterEnd
+                                ) {
+                                    Icon(
+                                        Icons.Default.Delete,
+                                        contentDescription = "Delete Expense",
+                                        tint = Color.White,
+                                        modifier = Modifier.padding(end = 16.dp)
+                                    )
                                 }
                             }
                         ) {
-                            Row(Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
-                                Column(Modifier.weight(1f)) {
-                                    Text(exp.description, fontWeight = FontWeight.Bold)
-                                    Text("Paid by ${payerNames.joinToString(", ")}", style = MaterialTheme.typography.bodySmall)
+                            Card(
+                                modifier = Modifier.fillMaxWidth().clickable {
+                                    scope.launch {
+                                        val pMap = payersForExp.associate { it.memberId to it.amountPaid }
+                                        val shares = viewModel.getExpenseShares(exp.id)
+                                        val sMap = shares.associate { it.memberId to it.weight }
+                                        editData = Triple(exp, pMap, sMap)
+                                        editingExpenseId = exp.id
+                                    }
                                 }
-                                Text("$${String.format("%.2f", exp.totalAmount)}", fontWeight = FontWeight.Bold)
-                                Spacer(Modifier.width(8.dp))
-                                IconButton(onClick = {
-                                    editingExpenseId = exp.id
-                                    showDeleteConfirm = true
-                                }) {
-                                    Icon(Icons.Default.Delete, "Delete", tint = MaterialTheme.colorScheme.error)
+                            ) {
+                                Row(Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
+                                    Column(Modifier.weight(1f)) {
+                                        Text(exp.description, fontWeight = FontWeight.Bold)
+                                        Text("Paid by ${payerNames.joinToString(", ")}", style = MaterialTheme.typography.bodySmall)
+                                    }
+                                    Text("$${String.format("%.2f", exp.totalAmount)}", fontWeight = FontWeight.Bold)
+                                    // Removed the old IconButton for delete
                                 }
                             }
                         }
@@ -413,6 +447,7 @@ fun GroupDetailsScreen(group: Group, viewModel: SplitViewModel, onBack: () -> Un
 
         // --- DIALOGS (Kept outside Column for proper layering) ---
 
+        // 1. ADD NEW EXPENSE
         if (showAddExpenseDialog) {
             AddExpenseDialog(
                 members = members,
@@ -423,7 +458,8 @@ fun GroupDetailsScreen(group: Group, viewModel: SplitViewModel, onBack: () -> Un
                 }
             )
         }
-
+        
+        // 2. ADD NEW MEMBER
         if (showAddMemberDialog) {
             AddMemberDialog(onDismiss = { showAddMemberDialog = false }, onConfirm = { name, weight ->
                 viewModel.addMember(group.id, name, weight)
@@ -431,6 +467,7 @@ fun GroupDetailsScreen(group: Group, viewModel: SplitViewModel, onBack: () -> Un
             })
         }
 
+        // 3. EDIT EXISTING EXPENSE
         if (editingExpenseId != null && editData != null) {
             val (exp, pMap, sMap) = editData!!
             AddExpenseDialog(
@@ -452,22 +489,25 @@ fun GroupDetailsScreen(group: Group, viewModel: SplitViewModel, onBack: () -> Un
             )
         }
 
-        if (showDeleteConfirm) {
+        // 4. DELETE EXPENSE CONFIRMATION (Now uses expenseToDelete)
+        expenseToDelete?.let { expense ->
             AlertDialog(
-                onDismissRequest = { showDeleteConfirm = false },
+                onDismissRequest = { expenseToDelete = null }, // Clear state on dismiss
                 title = { Text("Delete Expense?") },
-                text = { Text("Are you sure you want to delete this?") },
+                text = { Text("Are you sure you want to delete '${expense.description}'?") }, // Show expense description
                 confirmButton = {
                     TextButton(onClick = {
-                        editingExpenseId?.let { viewModel.deleteExpense(it) }
-                        showDeleteConfirm = false
-                        editingExpenseId = null
+                        viewModel.deleteExpense(expense.id) // Delete the actual expense
+                        expenseToDelete = null // Clear state after deletion
                     }) { Text("Delete", color = Color.Red) }
                 },
-                dismissButton = { TextButton(onClick = { showDeleteConfirm = false }) { Text("Cancel") } }
+                dismissButton = {
+                    TextButton(onClick = { expenseToDelete = null }) { Text("Cancel") }
+                }
             )
         }
 
+        // 5. SETTLEMENT DIALOG
         if (showSettlementDialog) {
             val settlementPlan by viewModel.getSettlementPlan(group.id).collectAsState(initial = emptyList())
             AlertDialog(

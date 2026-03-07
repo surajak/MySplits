@@ -1,1 +1,30 @@
+*.iml
+.gradle
+/local.properties
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+.DS_Store
 /build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+# --- ADD THESE LINES TO THE BOTTOM ---
+
+# 1. Signatures & Keystores (VERY IMPORTANT - Keep these private!)
+*.jks
+*.keystore
+*.p12
+*.key
+
+# 2. Build Artifacts (Keep your repo light)
+*.apk
+*.aab
+
+# 3. Google Services (If you ever add Firebase later)
+google-services.json
+e

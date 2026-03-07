@@ -5,7 +5,11 @@ A simple and efficient way to manage splits.
 ## 🚀 Features
 * Clean Material Design UI.
 * Built with Kotlin.
-* [Add one more feature here!]
+* export expenses in pdf.
+* No ads.Free to use
+* Multiple grous & multiple members can be added.
+* Weighted spliting possible.
+* Day Night theme.
 
 ## 🛠️ Installation
 1. Clone the repository.
