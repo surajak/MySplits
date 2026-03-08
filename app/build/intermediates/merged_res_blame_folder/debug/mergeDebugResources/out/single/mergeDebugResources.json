@@ -8,8 +8,20 @@
         "source": "com.SohamProject.mysplits.app-main-36:/mipmap-anydpi-v26/ic_launcher.xml"
     },
     {
+        "merged": "com.SohamProject.mysplits.app-debug-34:/mipmap-hdpi_ic_launcher_foreground.webp.flat",
+        "source": "com.SohamProject.mysplits.app-main-36:/mipmap-hdpi/ic_launcher_foreground.webp"
+    },
+    {
+        "merged": "com.SohamProject.mysplits.app-debug-34:/mipmap-xxxhdpi_ic_launcher_foreground.webp.flat",
+        "source": "com.SohamProject.mysplits.app-main-36:/mipmap-xxxhdpi/ic_launcher_foreground.webp"
+    },
+    {
         "merged": "com.SohamProject.mysplits.app-debug-34:/mipmap-xxhdpi_ic_launcher.webp.flat",
         "source": "com.SohamProject.mysplits.app-main-36:/mipmap-xxhdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "com.SohamProject.mysplits.app-debug-34:/mipmap-mdpi_ic_launcher_foreground.webp.flat",
+        "source": "com.SohamProject.mysplits.app-main-36:/mipmap-mdpi/ic_launcher_foreground.webp"
     },
     {
         "merged": "com.SohamProject.mysplits.app-debug-34:/mipmap-hdpi_ic_launcher.webp.flat",
@@ -22,6 +34,10 @@
     {
         "merged": "com.SohamProject.mysplits.app-debug-34:/xml_data_extraction_rules.xml.flat",
         "source": "com.SohamProject.mysplits.app-main-36:/xml/data_extraction_rules.xml"
+    },
+    {
+        "merged": "com.SohamProject.mysplits.app-debug-34:/mipmap-xhdpi_ic_launcher_foreground.webp.flat",
+        "source": "com.SohamProject.mysplits.app-main-36:/mipmap-xhdpi/ic_launcher_foreground.webp"
     },
     {
         "merged": "com.SohamProject.mysplits.app-debug-34:/mipmap-xxxhdpi_ic_launcher_round.webp.flat",
@@ -46,6 +62,10 @@
     {
         "merged": "com.SohamProject.mysplits.app-debug-34:/mipmap-xhdpi_ic_launcher_round.webp.flat",
         "source": "com.SohamProject.mysplits.app-main-36:/mipmap-xhdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "com.SohamProject.mysplits.app-debug-34:/mipmap-xxhdpi_ic_launcher_foreground.webp.flat",
+        "source": "com.SohamProject.mysplits.app-main-36:/mipmap-xxhdpi/ic_launcher_foreground.webp"
     },
     {
         "merged": "com.SohamProject.mysplits.app-debug-34:/drawable_ic_launcher_foreground.xml.flat",
