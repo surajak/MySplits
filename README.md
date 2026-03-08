@@ -22,5 +22,5 @@ A simple and efficient way to manage splits.
 2. Open in Android Studio.
 3. Build and run on an emulator or physical device.
 
-## 📲 Download
-You can download the latest version of the app from the [Releases](https://github.com/surajak/MySplits/releases) page.
+## Download
+[Click here to download latest APK](../../releases/latest/download/app-debug.apk)
