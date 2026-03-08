@@ -7,8 +7,8 @@ A simple and efficient way to manage splits.
 * Built with Kotlin.
 * export expenses in pdf.
 * No ads.Free to use
-* Multiple grous & multiple members can be added.
-* Weighted spliting possible.
+* Multiple groups & multiple members can be added.
+* Weighted splitting possible.
 * Day Night theme.
 
 ![Screenshot](screenshots/expenses%20list.png)
