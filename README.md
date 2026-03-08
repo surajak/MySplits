@@ -11,6 +11,7 @@ A simple and efficient way to manage splits.
 * Weighted spliting possible.
 * Day Night theme.
 
+![Screenshot](screenshots/expenses%20list.png)
 ## 🛠️ Installation
 1. Clone the repository.
 2. Open in Android Studio.
