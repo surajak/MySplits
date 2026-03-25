@@ -2,7 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.ksp)
     alias(libs.plugins.kotlin.compose)
-   // alias(libs.plugins.compose.compiler)
+    id("com.google.gms.google-services")
+    // alias(libs.plugins.compose.compiler)
 }
 
 android {
@@ -13,8 +14,8 @@ android {
         applicationId = "com.SohamProject.mysplits"
         minSdk = 24
         targetSdk = 35
-        versionCode = 2
-        versionName = "1.2"
+        versionCode = 3
+        versionName = "1.3"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -53,7 +54,8 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.material.icons.extended)
-    
+
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -68,4 +70,9 @@ dependencies {
 
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.gson)
+    // Import the Firebase BoM (it manages versions for all Firebase libs)
+    implementation(platform("com.google.firebase:firebase-bom:32.8.0"))
+    implementation("com.google.firebase:firebase-auth-ktx")
+    implementation("com.google.firebase:firebase-database-ktx")
+    implementation("com.google.zxing:core:3.5.3")
 }

@@ -11,7 +11,10 @@ import androidx.room.Relation
 data class Group(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val name: String,
-    val createdAt: Long = System.currentTimeMillis()
+    val createdAt: Long = System.currentTimeMillis(),
+    val isOnline: Boolean = false,
+    val remoteId: String? = null,
+    val joinCode: String? = null
 )
 
 // 2. THE MEMBER

@@ -50,7 +50,7 @@ fun MySplitsTheme(
         SideEffect {
             val window = (view.context as Activity).window
             // Set Status Bar Color
-            window.statusBarColor = colorScheme.primary.toArgb()
+           // window.statusBarColor = colorScheme.primary.toArgb()
             // Make status bar icons light or dark
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = !darkTheme // Corrected logic
         }
