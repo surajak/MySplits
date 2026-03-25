@@ -21,6 +21,11 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      # Add google services 
+      - name: Create google-services.json
+        # This writes the content of github secret into the expected file path
+        run: echo "${{ secrets.GOOGLE_SERVICES_JSON }}" > app/google-services.json 
+
       - name: Make gradlew executable
         run: chmod +x ./gradlew
 
@@ -34,3 +39,4 @@ jobs:
           files: app/build/outputs/apk/debug/app-debug.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
